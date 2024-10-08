@@ -28,12 +28,12 @@ class Config:
         return location
 
     @property
-    def host(self):
-        return f'http://{self.server_ip}:{self.port}'
+    def host_with_token(self):
+        return f'http://:{self.super_user_token}@{self.server_ip}:{self.port}'
 
     @property
-    def password(self):
-        return self.__get_cfg_attr('password')
+    def host(self):
+        return f'http://{self.server_ip}:{self.port}'
 
     @property
     def port(self):
@@ -44,8 +44,8 @@ class Config:
         return self.__get_cfg_attr('server_ip')
 
     @property
-    def username(self):
-        return self.__get_cfg_attr('username')
+    def super_user_token(self):
+        return self.__get_cfg_attr('super_user_token')
 
     def __get_cfg_attr(self, attr_name: str):
         if attr_name not in self._raw_data:
