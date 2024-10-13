@@ -27,6 +27,11 @@ def generate_faker_name() -> str:
     return Faker().name()
 
 
+def check_error_message(response: Response, expected_error_text: str) -> Response:
+    assert expected_error_text in response.text, 'Unexpected error message'
+    return response
+
+
 def check_status(response: Response, expected_code: int = 200) -> Response:
-    assert response.status_code == expected_code
+    assert response.status_code == expected_code, 'Unexpected response code'
     return response

@@ -3,7 +3,8 @@ import pytest
 
 from conftest import build_type_id, project_id, user, two_project_ids
 from logic.api.connection import TCUsers, TCProjects, TCBuildTypes
-from logic.utils.common import check_status
+from logic.models.api import APIErrors, Roles
+from logic.utils import check_error_message, check_status
 
 
 class TestBuildType:
@@ -11,7 +12,6 @@ class TestBuildType:
     @pytest.mark.description('User should be able to create build type')
     @pytest.mark.positive
     def test_user_creates_build_type(self, user, project_id, build_type_id):
-
         with allure.step('Create user'):
             response = TCUsers().create_user(user)
             check_status(response)
@@ -62,7 +62,7 @@ class TestBuildType:
 
         with allure.step('Create user with PROJECT_ADMIN role in a project created on previous step'):
             user_manager = TCUsers()
-            response = user_manager.create_user(user, 'PROJECT_ADMIN', f'p:{project_id}')
+            response = user_manager.create_user(user, Roles.project_admin, f'p:{project_id}')
             check_status(response)
             user.set_id(response.json().get('id'))
 
@@ -82,7 +82,7 @@ class TestBuildType:
 
         with allure.step('Create user with PROJECT_ADMIN role in a project created on previous step'):
             user_manager = TCUsers()
-            response = user_manager.create_user(user, 'PROJECT_ADMIN', f'p:{two_project_ids[0]}')
+            response = user_manager.create_user(user, Roles.project_admin, f'p:{two_project_ids[0]}')
             check_status(response)
             user.set_id(response.json().get('id'))
 
@@ -96,3 +96,4 @@ class TestBuildType:
 
         with allure.step('Check buildType was not created with forbidden code'):
             check_status(response, expected_code=403)
+            check_error_message(response, APIErrors.access_denied_user_permissions)

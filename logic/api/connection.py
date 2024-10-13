@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from requests import Session, Response
 
 from logic.cfg import Config
-from logic.models.api import TeamcityUser, EndpointName
+from logic.models.api import TeamcityUser, EndpointName, Roles
 from logic.utils import generate_faker_name
 
 
@@ -135,7 +135,7 @@ class TCUsers(TCConnector):
         return EndpointName.users
 
     def create_user(self, user: TeamcityUser,
-                    role_name: str = 'SYSTEM_ADMIN', scope: str = 'g') -> Response:
+                    role_name: str = Roles.system_admin, scope: str = 'g') -> Response:
         payload = {
             'username': user.username,
             'password': user.password
